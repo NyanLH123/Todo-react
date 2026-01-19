@@ -7,7 +7,7 @@ export default function Todoform({ addTodo }) {
   let handleSubmit = (e) => {
     e.preventDefault();
     let newTodo = {
-      id: Math.random(),
+      id: Math.floor(Math.random() * 1000000),
       task,
       completed: false,
     };

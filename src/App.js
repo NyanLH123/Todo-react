@@ -32,33 +32,57 @@ function App() {
 
   let deleteTodo = (id) => {
     fetch(`http://localhost:3001/todos/${id}`, {
-      method: "DELETE"
+      method: "DELETE",
     });
-    setTodos(prevState => prevState.filter(todo => todo.id !== id));
+    setTodos((prevState) => prevState.filter((todo) => todo.id !== id));
   };
 
   let updateTodo = (updatedTodo) => {
     fetch(`http://localhost:3001/todos/${updatedTodo.id}`, {
-      method: 'PUT',
+      method: "PATCH",
       headers: {
-          'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(updatedTodo)
-  });
-    setTodos(prevState => prevState.map(todo => todo.id === updatedTodo.id ? updatedTodo : todo));
+      body: JSON.stringify(updatedTodo),
+    });
+    setTodos((prevState) =>
+      prevState.map((todo) =>
+        todo.id === updatedTodo.id ? updatedTodo : todo,
+      ),
+    );
+  };
+
+  let remainingCount = todos.filter(t => !t.completed).length;
+
+  let checkAll = () => {
+    todos.forEach(t => {
+      t.completed = true;
+      updateTodo(t);
+    })
+    setTodos((prevState) => prevState.map(t => ({...t, completed: true})));
+  };
+
+  let clearCompleted = () => {
+    todos.forEach(t => t.completed && deleteTodo(t.id));
+    setTodos(prevState => prevState.filter(t => !t.completed));
   }
+  
   return (
     <div className="todo-app-container">
       <div className="todo-app">
         <h2>Todo App</h2>
         <Todoform addTodo={addTodo} />
 
-        <Todolist todos={todos} deleteTodo={deleteTodo} updateTodo={updateTodo} />
+        <Todolist
+          todos={todos}
+          deleteTodo={deleteTodo}
+          updateTodo={updateTodo}
+        />
 
-        <CheckAll />
+        <CheckAll remainingCount={remainingCount} checkAll={checkAll} />
         <div className="other-buttons-container">
           <Filter />
-          <ClearCompleted />
+          <ClearCompleted clearCompleted={clearCompleted} />
         </div>
       </div>
     </div>

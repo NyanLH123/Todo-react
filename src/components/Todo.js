@@ -14,9 +14,10 @@ let updateTodoHandler = (e) => {
   return (
     <li className="todo-item-container" key={todo.id}>
           <div className="todo-item">
-            <input type="checkbox" />{!isEdit && <span className={`todo-item-label ${todo.completed ? "line-through" : ""}`} onDoubleClick={() => setIsEdit(true)}>{todo.task}</span>}
+            <input type="checkbox" checked={todo.completed} onChange={(e) => todo.completed ? e.target.checked : e}/>
+            {!isEdit && <span className={`todo-item-label ${todo.completed ? "line-through" : ""}`} onDoubleClick={() => setIsEdit(true)}>{todo.task}</span>}
             <form onSubmit={updateTodoHandler}>
-              {isEdit && <input autoFo cus type="text" className="todo-item-input" defaultValue={todo.task} onChange={(e) => setTask(e.target.value)}/>}
+              {isEdit && <input autoFocus type="text" className="todo-item-input" defaultValue={todo.task} onChange={(e) => setTask(e.target.value)}/>}
             </form>
           </div>
           <button className="x-button" onClick={() => deleteTodo(todo.id)}>
