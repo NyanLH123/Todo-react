@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-export default function Filter() {
+export default function Filter({ filterBy }) {
+  let [filter, setFilter] = React.useState("All");
+
+  useEffect(() => {
+    filterBy(filter);
+  }, [filterBy, filter]);
   return (
     <div>
-      <button className="button filter-button filter-button-active">All</button>
-      <button className="button filter-button">Active</button>
-      <button className="button filter-button">Completed</button>
+      <button className={`button filter-button ${filter === "All" ? "filter-button-active" : ""}`} onClick={() => {setFilter("All"); filterBy("All")}}>All</button>
+      <button className={`button filter-button ${filter === "Active" ? "filter-button-active" : ""}`} onClick={() => {setFilter("Active"); filterBy("Active")}}>Active</button>
+      <button className={`button filter-button ${filter === "Completed" ? "filter-button-active" : ""}`} onClick={() => {setFilter("Completed"); filterBy("Completed")}}>Completed</button>
     </div>
   );
 }

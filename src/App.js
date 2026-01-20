@@ -6,15 +6,28 @@ import Todolist from "./components/Todolist";
 import CheckAll from "./components/CheckAll";
 import Filter from "./components/Filter";
 import ClearCompleted from "./components/ClearCompleted";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 function App() {
   let [todos, setTodos] = useState([]);
+  let [filteredTodo, setFilteredTodo] = useState(todos);
+
   useEffect(() => {
     fetch("http://localhost:3001/todos")
       .then((response) => response.json())
-      .then((todos) => setTodos(todos));
+      .then((todos) => {setTodos(todos)
+        setFilteredTodo(todos)});
   }, []);
+
+  let filterBy = useCallback((filter) => {
+    if (filter === "All") {
+      setFilteredTodo(todos);
+    } else if (filter === "Active") {
+      setFilteredTodo(todos.filter(t => !t.completed));
+    } else if (filter === "Completed") {
+      setFilteredTodo(todos.filter(t => t.completed));
+    }
+  }, [todos]);
 
   let addTodo = (newTodo) => {
     // Server-side POST
@@ -81,7 +94,7 @@ function App() {
 
         <CheckAll remainingCount={remainingCount} checkAll={checkAll} />
         <div className="other-buttons-container">
-          <Filter />
+          <Filter filteredTodo={filteredTodo} filterBy={filterBy} />
           <ClearCompleted clearCompleted={clearCompleted} />
         </div>
       </div>
